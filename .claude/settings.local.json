@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(New-Item -ItemType Directory -Force \"d:\\\\code\\\\New folder\\\\dynamic_app\\\\lib\\\\config\")",
+      "Bash(Out-Null)",
+      "Bash(New-Item -ItemType Directory -Force \"d:\\\\code\\\\New folder\\\\dynamic_app\\\\lib\\\\screens\")",
+      "Bash(New-Item -ItemType Directory -Force \"d:\\\\code\\\\New folder\\\\dynamic_app\\\\assets\\\\images\")",
+      "Bash(Write-Output \"Directories created\")",
+      "Bash(flutter pub *)",
+      "Bash(flutter analyze *)",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\code\\\\New folder\\\\dynamic_app\\\\.github\\\\workflows\")"
+    ]
+  }
+}
