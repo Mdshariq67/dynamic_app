@@ -164,14 +164,14 @@ jobs:
         run: |
           set -e
 
-          echo "${KEYSTORE_BASE64}" | base64 -d > upload-keystore.jks
-          echo "Keystore decoded"
+          echo "${KEYSTORE_BASE64}" | base64 -d > upload-keystore.p12
 
           BUILD_TOOLS_DIR="${ANDROID_SDK_ROOT}/build-tools/$(ls ${ANDROID_SDK_ROOT}/build-tools | sort -V | tail -1)"
           echo "Using build tools: ${BUILD_TOOLS_DIR}"
 
           "${BUILD_TOOLS_DIR}/apksigner" sign \
-            --ks upload-keystore.jks \
+            --ks upload-keystore.p12 \
+            --ks-type PKCS12 \
             --ks-key-alias "${KEY_ALIAS}" \
             --ks-pass "pass:${STORE_PASSWORD}" \
             --key-pass "pass:${KEY_PASSWORD}" \
@@ -181,7 +181,7 @@ jobs:
           echo "--- Verifying signature ---"
           "${BUILD_TOOLS_DIR}/apksigner" verify --verbose "${{ inputs.app_slug }}.apk"
 
-          rm -f upload-keystore.jks
+          rm -f upload-keystore.p12
           echo "APK ready: ${{ inputs.app_slug }}.apk"
 
       - name: Delete existing release (if any)
