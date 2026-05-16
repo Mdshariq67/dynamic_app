@@ -151,8 +151,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build debug APK (no signing needed)
-        run: flutter build apk --debug
+      - name: Build release APK (Flutter debug signed)
+        run: flutter build apk --release
 
       - name: Rename APK
         run: |
