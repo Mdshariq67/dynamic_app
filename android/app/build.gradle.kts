@@ -1,7 +1,16 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val keyPropertiesFile = rootProject.file("key.properties")
+val keyProperties = Properties()
+if (keyPropertiesFile.exists()) {
+    keyProperties.load(FileInputStream(keyPropertiesFile))
 }
 
 android {
@@ -18,6 +27,17 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = keyPropertiesFile.exists()
+                ? file("app/" + keyProperties["storeFile"])
+                : null
+            storePassword = keyProperties["storePassword"] as String? ?: ""
+            keyAlias = keyProperties["keyAlias"] as String? ?: ""
+            keyPassword = keyProperties["keyPassword"] as String? ?: ""
+        }
+    }
+
     defaultConfig {
         applicationId = "com.example.dynamic_app"
         minSdk = flutter.minSdkVersion
@@ -28,9 +48,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (keyPropertiesFile.exists())
+                signingConfigs.getByName("release")
+            else
+                signingConfigs.getByName("debug")
         }
     }
 }

@@ -84,7 +84,7 @@ jobs:
       - name: Download logo
         run: |
           curl -L --fail -o assets/logo.png "${{ inputs.logo_url }}"
-          echo "Logo downloaded successfully"
+          echo "Logo downloaded"
           ls -la assets/logo.png
 
       - name: Generate lib/config/app_config.dart
@@ -96,6 +96,10 @@ jobs:
           ACCENT_COLOR: ${{ inputs.accent_color }}
           FONT_FAMILY: ${{ inputs.font_family }}
         run: |
+          PRIMARY_COLOR="${PRIMARY_COLOR//#/}"
+          SECONDARY_COLOR="${SECONDARY_COLOR//#/}"
+          ACCENT_COLOR="${ACCENT_COLOR//#/}"
+
           cat > lib/config/app_config.dart << 'EOF'
           // AUTO-GENERATED — do not edit manually
           import 'package:flutter/material.dart';
@@ -111,16 +115,11 @@ jobs:
           }
           EOF
 
-          # Strip leading '#' so users can enter colors with or without it
-          PRIMARY="${PRIMARY_COLOR#\#}"
-          SECONDARY="${SECONDARY_COLOR#\#}"
-          ACCENT="${ACCENT_COLOR#\#}"
-
           sed -i "s|APP_NAME_PLACEHOLDER|${APP_NAME}|g" lib/config/app_config.dart
           sed -i "s|DESCRIPTION_PLACEHOLDER|${DESCRIPTION}|g" lib/config/app_config.dart
-          sed -i "s|PRIMARY_PLACEHOLDER|${PRIMARY}|g" lib/config/app_config.dart
-          sed -i "s|SECONDARY_PLACEHOLDER|${SECONDARY}|g" lib/config/app_config.dart
-          sed -i "s|ACCENT_PLACEHOLDER|${ACCENT}|g" lib/config/app_config.dart
+          sed -i "s|PRIMARY_PLACEHOLDER|${PRIMARY_COLOR}|g" lib/config/app_config.dart
+          sed -i "s|SECONDARY_PLACEHOLDER|${SECONDARY_COLOR}|g" lib/config/app_config.dart
+          sed -i "s|ACCENT_PLACEHOLDER|${ACCENT_COLOR}|g" lib/config/app_config.dart
           sed -i "s|FONT_PLACEHOLDER|${FONT_FAMILY}|g" lib/config/app_config.dart
 
           echo "--- Generated app_config.dart ---"
@@ -149,40 +148,37 @@ jobs:
           echo "--- Updated build.gradle.kts ---"
           cat android/app/build.gradle.kts
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build release APK
-        run: flutter build apk --release
-
-      - name: Sign APK
+      - name: Setup keystore and key.properties
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         run: |
-          set -e
+          echo "${KEYSTORE_BASE64}" | base64 -d > android/app/upload-keystore.p12
 
-          echo "${KEYSTORE_BASE64}" | base64 -d > upload-keystore.p12
+          cat > android/key.properties << EOF
+          storePassword=${STORE_PASSWORD}
+          keyPassword=${KEY_PASSWORD}
+          keyAlias=${KEY_ALIAS}
+          storeFile=upload-keystore.p12
+          EOF
 
-          BUILD_TOOLS_DIR="${ANDROID_SDK_ROOT}/build-tools/$(ls ${ANDROID_SDK_ROOT}/build-tools | sort -V | tail -1)"
-          echo "Using build tools: ${BUILD_TOOLS_DIR}"
+          echo "key.properties created"
+          cat android/key.properties
 
-          "${BUILD_TOOLS_DIR}/apksigner" sign \
-            --ks upload-keystore.p12 \
-            --ks-type PKCS12 \
-            --ks-key-alias "${KEY_ALIAS}" \
-            --ks-pass "pass:${STORE_PASSWORD}" \
-            --key-pass "pass:${KEY_PASSWORD}" \
-            --out "${{ inputs.app_slug }}.apk" \
-            build/app/outputs/flutter-apk/app-release.apk
+      - name: Install dependencies
+        run: flutter pub get
 
-          echo "--- Verifying signature ---"
-          "${BUILD_TOOLS_DIR}/apksigner" verify --verbose "${{ inputs.app_slug }}.apk"
+      - name: Build and sign release APK
+        run: flutter build apk --release
 
-          rm -f upload-keystore.p12
+      - name: Rename APK
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk \
+             "${{ inputs.app_slug }}.apk"
           echo "APK ready: ${{ inputs.app_slug }}.apk"
+          ls -la "${{ inputs.app_slug }}.apk"
 
       - name: Delete existing release (if any)
         env:
