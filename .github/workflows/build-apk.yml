@@ -148,34 +148,15 @@ jobs:
           echo "--- Updated build.gradle.kts ---"
           cat android/app/build.gradle.kts
 
-      - name: Setup keystore and key.properties
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-        run: |
-          echo "${KEYSTORE_BASE64}" | base64 -d > android/upload-keystore.p12
-
-          cat > android/key.properties << EOF
-          storePassword=${STORE_PASSWORD}
-          keyPassword=${KEY_PASSWORD}
-          keyAlias=${KEY_ALIAS}
-          storeFile=upload-keystore.p12
-          EOF
-
-          echo "key.properties created"
-          cat android/key.properties
-
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build and sign release APK
-        run: flutter build apk --release
+      - name: Build debug APK (no signing needed)
+        run: flutter build apk --debug
 
       - name: Rename APK
         run: |
-          cp build/app/outputs/flutter-apk/app-release.apk \
+          cp build/app/outputs/flutter-apk/app-debug.apk \
              "${{ inputs.app_slug }}.apk"
           echo "APK ready: ${{ inputs.app_slug }}.apk"
           ls -la "${{ inputs.app_slug }}.apk"
