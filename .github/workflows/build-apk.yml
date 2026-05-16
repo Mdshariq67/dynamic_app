@@ -156,7 +156,8 @@ jobs:
 
       - name: Rename APK
         run: |
-          cp build/app/outputs/flutter-apk/app-debug.apk \
+          ls -la build/app/outputs/flutter-apk/
+          cp build/app/outputs/flutter-apk/app-release.apk \
              "${{ inputs.app_slug }}.apk"
           echo "APK ready: ${{ inputs.app_slug }}.apk"
           ls -la "${{ inputs.app_slug }}.apk"
