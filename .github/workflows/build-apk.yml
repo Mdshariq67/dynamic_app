@@ -111,11 +111,16 @@ jobs:
           }
           EOF
 
+          # Strip leading '#' so users can enter colors with or without it
+          PRIMARY="${PRIMARY_COLOR#\#}"
+          SECONDARY="${SECONDARY_COLOR#\#}"
+          ACCENT="${ACCENT_COLOR#\#}"
+
           sed -i "s|APP_NAME_PLACEHOLDER|${APP_NAME}|g" lib/config/app_config.dart
           sed -i "s|DESCRIPTION_PLACEHOLDER|${DESCRIPTION}|g" lib/config/app_config.dart
-          sed -i "s|PRIMARY_PLACEHOLDER|${PRIMARY_COLOR}|g" lib/config/app_config.dart
-          sed -i "s|SECONDARY_PLACEHOLDER|${SECONDARY_COLOR}|g" lib/config/app_config.dart
-          sed -i "s|ACCENT_PLACEHOLDER|${ACCENT_COLOR}|g" lib/config/app_config.dart
+          sed -i "s|PRIMARY_PLACEHOLDER|${PRIMARY}|g" lib/config/app_config.dart
+          sed -i "s|SECONDARY_PLACEHOLDER|${SECONDARY}|g" lib/config/app_config.dart
+          sed -i "s|ACCENT_PLACEHOLDER|${ACCENT}|g" lib/config/app_config.dart
           sed -i "s|FONT_PLACEHOLDER|${FONT_FAMILY}|g" lib/config/app_config.dart
 
           echo "--- Generated app_config.dart ---"
