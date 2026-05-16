@@ -185,7 +185,13 @@ jobs:
           mv build/app/outputs/flutter-apk/app-release-signed.apk \
              "${{ inputs.app_slug }}.apk"
 
-      # ── 12. Release ───────────────────────────────────────────────────────
+      # ── 12. Verify signature ──────────────────────────────────────────────
+      - name: Verify APK signature
+        run: |
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools | tail -1)/apksigner \
+          verify --verbose ${{ inputs.app_slug }}.apk
+
+      # ── 13. Release ───────────────────────────────────────────────────────
       # Delete the existing release first so rebuilds with the same slug
       # replace rather than fail. --cleanup-tag removes the git tag too,
       # allowing gh release create to recreate it cleanly.
