@@ -29,12 +29,12 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = keyPropertiesFile.exists()
-                ? file("app/" + keyProperties["storeFile"])
-                : null
-            storePassword = keyProperties["storePassword"] as String? ?: ""
-            keyAlias = keyProperties["keyAlias"] as String? ?: ""
-            keyPassword = keyProperties["keyPassword"] as String? ?: ""
+            if (keyPropertiesFile.exists()) {
+                storeFile = file("app/" + keyProperties["storeFile"])
+                storePassword = keyProperties["storePassword"] as String
+                keyAlias = keyProperties["keyAlias"] as String
+                keyPassword = keyProperties["keyPassword"] as String
+            }
         }
     }
 
@@ -48,10 +48,11 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (keyPropertiesFile.exists())
-                signingConfigs.getByName("release")
-            else
-                signingConfigs.getByName("debug")
+            if (keyPropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            } else {
+                signingConfig = signingConfigs.getByName("debug")
+            }
         }
     }
 }
