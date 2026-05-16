@@ -117,12 +117,8 @@ jobs:
           }
           EOF
 
-      # ── 7. Patch build.gradle ─────────────────────────────────────────────
-      # Targets the property-assignment lines inside defaultConfig {}.
-      # Patterns use [[:space:]] so they match the assignment line
-      # (e.g. "    versionCode 1") but NOT definition lines
-      # (e.g. "    def flutterVersionCode = ...").
-      - name: Patch android/app/build.gradle
+      # ── 7. Patch build.gradle.kts ────────────────────────────────────────────
+      - name: Update app config in build.gradle.kts
         env:
           VERSION_NAME: ${{ inputs.version_name }}
           VERSION_CODE: ${{ inputs.version_code }}
@@ -131,16 +127,19 @@ jobs:
           APP_ID="com.whitelabel.$(echo "${APP_SLUG}" | tr '-' '_')"
 
           sed -i \
-            "s|^\(\s*\)applicationId[[:space:]].*|\1applicationId \"${APP_ID}\"|" \
-            android/app/build.gradle
+            "s|applicationId = \".*\"|applicationId = \"${APP_ID}\"|" \
+            android/app/build.gradle.kts
 
           sed -i \
-            "s|^\(\s*\)versionCode[[:space:]].*|\1versionCode ${VERSION_CODE}|" \
-            android/app/build.gradle
+            "s|versionCode = [0-9]*|versionCode = ${VERSION_CODE}|" \
+            android/app/build.gradle.kts
 
           sed -i \
-            "s|^\(\s*\)versionName[[:space:]].*|\1versionName \"${VERSION_NAME}\"|" \
-            android/app/build.gradle
+            "s|versionName = \".*\"|versionName = \"${VERSION_NAME}\"|" \
+            android/app/build.gradle.kts
+
+          echo "Updated build.gradle.kts:"
+          cat android/app/build.gradle.kts
 
       # ── 8. Dependencies ───────────────────────────────────────────────────
       - name: Install dependencies
