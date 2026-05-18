@@ -125,6 +125,15 @@ jobs:
           echo "--- Generated app_config.dart ---"
           cat lib/config/app_config.dart
 
+      - name: Update Android app_name string resource
+        env:
+          APP_NAME: ${{ inputs.app_name }}
+        run: |
+          sed -i "s|<string name=\"app_name\">.*</string>|<string name=\"app_name\">${APP_NAME}</string>|" \
+            android/app/src/main/res/values/styles.xml
+          echo "--- Updated styles.xml ---"
+          cat android/app/src/main/res/values/styles.xml
+
       - name: Update build.gradle.kts
         env:
           VERSION_NAME: ${{ inputs.version_name }}
