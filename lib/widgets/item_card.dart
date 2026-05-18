@@ -7,68 +7,141 @@ class ItemCard extends StatelessWidget {
 
   final int index;
 
+  static const _books = [
+    ('The Lost City', 'James Turner', 'Fiction', Color(0xFF5C6BC0), 4.5),
+    ('Quantum Minds', 'Dr. Sara Patel', 'Science', Color(0xFF26A69A), 4.2),
+    ('Ancient Worlds', 'M. Holloway', 'History', Color(0xFFEC407A), 4.8),
+    ('Code & Create', 'Alex Chen', 'Technology', Color(0xFFFF7043), 3.9),
+    ('The Art of Design', 'L. Fontaine', 'Arts', Color(0xFF8D6E63), 4.6),
+    ('Ocean of Stars', 'N. Krishnan', 'Science', Color(0xFF42A5F5), 4.1),
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final (title, author, genre, color, rating) =
+        _books[index % _books.length];
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        border: Border.all(color: AppConfig.primaryColor, width: 1.5),
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
+      child: Row(
+        children: [
+          Container(
+            width: 82,
+            height: 120,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius:
+                  const BorderRadius.horizontal(left: Radius.circular(16)),
+            ),
+            child: const Icon(
+              Icons.menu_book_rounded,
+              color: Colors.white38,
+              size: 36,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Item ${index + 1}',
-                    style: GoogleFonts.getFont(
-                      AppConfig.fontFamily,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppConfig.primaryColor,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: AppConfig.accentColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      genre,
+                      style: GoogleFonts.getFont(
+                        AppConfig.fontFamily,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: AppConfig.primaryColor,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Text(
-                    'A short description for item ${index + 1}.',
+                    title,
                     style: GoogleFonts.getFont(
                       AppConfig.fontFamily,
-                      fontSize: 13,
-                      color: Colors.black54,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF1A1D2E),
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    author,
+                    style: GoogleFonts.getFont(
+                      AppConfig.fontFamily,
+                      fontSize: 12,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.star_rounded,
+                        color: Color(0xFFFFC107),
+                        size: 16,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        rating.toString(),
+                        style: GoogleFonts.getFont(
+                          AppConfig.fontFamily,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey.shade700,
+                        ),
+                      ),
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppConfig.primaryColor,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          minimumSize: const Size(68, 32),
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'View',
+                          style: GoogleFonts.getFont(
+                            AppConfig.fontFamily,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppConfig.accentColor,
-                foregroundColor: AppConfig.primaryColor,
-                elevation: 0,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                'View',
-                style: GoogleFonts.getFont(
-                  AppConfig.fontFamily,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
