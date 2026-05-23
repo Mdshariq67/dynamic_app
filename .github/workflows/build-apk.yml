@@ -90,6 +90,7 @@ jobs:
       - name: Generate lib/config/app_config.dart
         env:
           APP_NAME: ${{ inputs.app_name }}
+          APP_SLUG: ${{ inputs.app_slug }}
           DESCRIPTION: ${{ inputs.description }}
           PRIMARY_COLOR: ${{ inputs.primary_color }}
           SECONDARY_COLOR: ${{ inputs.secondary_color }}
@@ -105,7 +106,9 @@ jobs:
           import 'package:flutter/material.dart';
 
           class AppConfig {
+            AppConfig._();
             static const String appName = "APP_NAME_PLACEHOLDER";
+            static const String appSlug = "APP_SLUG_PLACEHOLDER";
             static const String description = "DESCRIPTION_PLACEHOLDER";
             static const Color primaryColor = Color(0xFFPRIMARY_PLACEHOLDER);
             static const Color secondaryColor = Color(0xFFSECONDARY_PLACEHOLDER);
@@ -116,6 +119,7 @@ jobs:
           EOF
 
           sed -i "s|APP_NAME_PLACEHOLDER|${APP_NAME}|g" lib/config/app_config.dart
+          sed -i "s|APP_SLUG_PLACEHOLDER|${APP_SLUG}|g" lib/config/app_config.dart
           sed -i "s|DESCRIPTION_PLACEHOLDER|${DESCRIPTION}|g" lib/config/app_config.dart
           sed -i "s|PRIMARY_PLACEHOLDER|${PRIMARY_COLOR}|g" lib/config/app_config.dart
           sed -i "s|SECONDARY_PLACEHOLDER|${SECONDARY_COLOR}|g" lib/config/app_config.dart
