@@ -161,6 +161,12 @@ jobs:
           echo "--- Updated build.gradle.kts ---"
           cat android/app/build.gradle.kts
 
+          sed -i "s|\"package_name\": \".*\"|\"package_name\": \"${APP_ID}\"|" \
+            android/app/google-services.json
+
+          echo "--- Updated google-services.json ---"
+          cat android/app/google-services.json
+
       - name: Install dependencies
         run: flutter pub get
 
