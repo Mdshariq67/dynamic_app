@@ -8,7 +8,9 @@
       "Bash(Write-Output \"Directories created\")",
       "Bash(flutter pub *)",
       "Bash(flutter analyze *)",
-      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\code\\\\New folder\\\\dynamic_app\\\\.github\\\\workflows\")"
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\code\\\\New folder\\\\dynamic_app\\\\.github\\\\workflows\")",
+      "Bash(Get-ChildItem -Path \"d:\\\\code\\\\New folder\\\\dynamic_app\" -Force)",
+      "Bash(Select-Object -Property Name, PSIsContainer)"
     ]
   }
 }

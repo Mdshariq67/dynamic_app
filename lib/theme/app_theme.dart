@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../config/app_config.dart';
+
+import '../config/preview_app_config.dart';
 
 class AppTheme {
   AppTheme._();
 
   static ThemeData get theme {
-    final textTheme = GoogleFonts.getTextTheme(AppConfig.fontFamily);
+    final textTheme = GoogleFonts.getTextTheme(PreviewAppConfig.fontFamily);
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: AppConfig.primaryColor,
-        primary: AppConfig.primaryColor,
-        secondary: AppConfig.secondaryColor,
-        tertiary: AppConfig.accentColor,
+        seedColor: PreviewAppConfig.primaryColor,
+        primary: PreviewAppConfig.primaryColor,
+        secondary: PreviewAppConfig.secondaryColor,
+        tertiary: PreviewAppConfig.accentColor,
       ),
-      primaryColor: AppConfig.primaryColor,
+      primaryColor: PreviewAppConfig.primaryColor,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppConfig.primaryColor,
+        backgroundColor: PreviewAppConfig.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
         titleTextStyle: GoogleFonts.getFont(
-          AppConfig.fontFamily,
+          PreviewAppConfig.fontFamily,
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: Colors.white,

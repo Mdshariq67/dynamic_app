@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "347224372745",
+    "project_id": "dynamiapp-d21ee",
+    "storage_bucket": "dynamiapp-d21ee.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347224372745:android:386daa3eb0bcc5c7e0aad8",
+        "android_client_info": {
+          "package_name": "com.example.dynamic_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzUfqqx0DFKUdJvjPon-e5sFTF1z2rV00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,129 +1,108 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../config/app_config.dart';
-import '../widgets/item_card.dart';
+import 'package:provider/provider.dart';
+
+import '../components/component_renderer.dart';
+import '../config/preview_app_config.dart';
+import '../config/ui_config_service.dart';
 
 class ListingScreen extends StatelessWidget {
   const ListingScreen({super.key});
 
-  static const _filters = [
-    'All',
-    'Fiction',
-    'Science',
-    'History',
-    'Technology',
-    'Arts',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 110,
-            backgroundColor: AppConfig.primaryColor,
-            foregroundColor: Colors.white,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                AppConfig.appName,
-                style: GoogleFonts.getFont(
-                  AppConfig.fontFamily,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              ),
-              titlePadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      appBar: AppBar(
+        title: Text(PreviewAppConfig.appName),
+        backgroundColor: PreviewAppConfig.primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Consumer<UiConfigService>(
+        builder: (context, service, _) {
+          if (service.state == ConfigState.loading) {
+            return _buildShimmer();
+          }
+
+          final screen = service.config.screens['listing'];
+          if (screen == null || screen.components.isEmpty) {
+            return const Center(child: Text('No content configured.'));
+          }
+
+          final sorted = [...screen.components]
+            ..sort((a, b) => a.order.compareTo(b.order));
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: sorted.length,
+            itemBuilder: (_, i) => Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: ComponentRenderer(component: sorted[i]),
             ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildShimmer() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: List.generate(
+        5,
+        (i) => Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _ShimmerBox(height: i == 0 ? 48 : 90),
+        ),
+      ),
+    );
+  }
+}
+
+class _ShimmerBox extends StatefulWidget {
+  final double height;
+
+  const _ShimmerBox({required this.height});
+
+  @override
+  State<_ShimmerBox> createState() => _ShimmerBoxState();
+}
+
+class _ShimmerBoxState extends State<_ShimmerBox>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+    _opacity = Tween<double>(begin: 0.35, end: 0.75).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _opacity,
+      builder: (_, __) => Opacity(
+        opacity: _opacity.value,
+        child: Container(
+          height: widget.height,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(10),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withAlpha(15),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.search_rounded,
-                        color: Colors.grey.shade400, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Search in collection...',
-                      style: GoogleFonts.getFont(
-                        AppConfig.fontFamily,
-                        color: Colors.grey.shade400,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: 50,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-                itemCount: _filters.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, i) {
-                  final selected = i == 0;
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? AppConfig.primaryColor
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: selected
-                            ? Colors.transparent
-                            : Colors.grey.shade200,
-                      ),
-                    ),
-                    child: Text(
-                      _filters[i],
-                      style: GoogleFonts.getFont(
-                        AppConfig.fontFamily,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: selected
-                            ? Colors.white
-                            : Colors.grey.shade600,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => ItemCard(index: index),
-                childCount: 6,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

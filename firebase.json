@@ -1,0 +1,39 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "dynamiapp-d21ee",
+          "appId": "1:347224372745:android:386daa3eb0bcc5c7e0aad8",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "dynamiapp-d21ee",
+          "configurations": {
+            "android": "1:347224372745:android:386daa3eb0bcc5c7e0aad8",
+            "ios": "1:347224372745:ios:99db92622b207374e0aad8",
+            "macos": "1:347224372745:ios:99db92622b207374e0aad8",
+            "web": "1:347224372745:web:4a03a714c7fd9bd2e0aad8",
+            "windows": "1:347224372745:web:e90e83937f07ad1fe0aad8"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
