@@ -32,12 +32,21 @@ class HomeScreen extends StatelessWidget {
             ..sort((a, b) => a.order.compareTo(b.order));
 
           return ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.zero,
             itemCount: sorted.length,
-            itemBuilder: (_, i) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: ComponentRenderer(component: sorted[i]),
-            ),
+            itemBuilder: (_, i) {
+              final component = sorted[i];
+              final isHero = component.type == 'hero_banner';
+              return Padding(
+                padding: EdgeInsets.fromLTRB(
+                  isHero ? 0 : 16,
+                  0,
+                  isHero ? 0 : 16,
+                  16,
+                ),
+                child: ComponentRenderer(component: component),
+              );
+            },
           );
         },
       ),

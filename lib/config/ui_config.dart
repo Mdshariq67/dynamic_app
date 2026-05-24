@@ -108,7 +108,7 @@ class UiConfig {
               'backgroundColor': '',
               'textColor': '',
               'height': 200,
-              'borderRadius': 12,
+              'borderRadius': 0,
             },
           ),
           UiComponent(
@@ -122,25 +122,12 @@ class UiConfig {
             },
           ),
           UiComponent(
-            id: 'default_featured',
-            type: 'horizontal_scroll_list',
+            id: 'default_grid',
+            type: 'item_grid',
             visible: true,
             order: 2,
             config: {
               'title': 'Featured',
-              'showSeeAll': false,
-              'cardWidth': 160,
-              'cardHeight': 200,
-              'spacing': 12,
-            },
-          ),
-          UiComponent(
-            id: 'default_grid',
-            type: 'item_grid',
-            visible: true,
-            order: 3,
-            config: {
-              'title': 'All Items',
               'columns': 2,
               'spacing': 12,
               'cardStyle': 'elevated',
