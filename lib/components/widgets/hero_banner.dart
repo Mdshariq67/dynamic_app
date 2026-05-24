@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../config/app_config.dart';
 import '../../config/preview_app_config.dart';
 import '../utils/color_utils.dart';
 
@@ -41,7 +42,26 @@ class HeroBannerWidget extends StatelessWidget {
                 errorWidget: (_, __, ___) => Container(color: bgColor),
               )
             else
-              Container(color: bgColor),
+              Stack(
+                fit: StackFit.expand,
+                children: [
+                  Container(color: bgColor),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Image.asset(
+                        AppConfig.logoPath,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.image_outlined,
+                          color: Colors.white54,
+                          size: 48,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(

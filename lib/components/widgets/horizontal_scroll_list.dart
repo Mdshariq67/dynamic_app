@@ -27,7 +27,13 @@ class HorizontalScrollListWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title.isNotEmpty)
-          SectionHeaderWidget(config: {'title': title}),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: SectionHeaderWidget(config: {
+              'title': title,
+              'showSeeAll': config['showSeeAll'] ?? false,
+            }),
+          ),
         SizedBox(
           height: cardHeight,
           child: ListView.separated(

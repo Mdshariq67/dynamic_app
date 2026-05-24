@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../config/app_config.dart';
 import '../../config/preview_app_config.dart';
 
 class ItemCard extends StatelessWidget {
@@ -175,7 +176,8 @@ class ItemCard extends StatelessWidget {
                 TextButton(
                   onPressed: () {},
                   style: TextButton.styleFrom(
-                    foregroundColor: PreviewAppConfig.primaryColor,
+                    foregroundColor: AppConfig.accentColor,
+                    overlayColor: AppConfig.accentColor.withValues(alpha: 0.1),
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     minimumSize: Size.zero,

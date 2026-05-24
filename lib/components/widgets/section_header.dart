@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../config/preview_app_config.dart';
+import '../../config/app_config.dart';
 
 class SectionHeaderWidget extends StatelessWidget {
   final Map<String, dynamic> config;
@@ -24,7 +24,7 @@ class SectionHeaderWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: PreviewAppConfig.primaryColor,
+              color: AppConfig.secondaryColor,
             ),
           ),
           if (showSeeAll)
@@ -32,7 +32,7 @@ class SectionHeaderWidget extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(context, '/listing'),
               child: Text(
                 'See all',
-                style: TextStyle(color: PreviewAppConfig.primaryColor),
+                style: TextStyle(color: AppConfig.secondaryColor),
               ),
             ),
         ],

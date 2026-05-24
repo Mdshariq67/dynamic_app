@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../config/app_config.dart';
 import '../../config/preview_app_config.dart';
 import '../utils/color_utils.dart';
 
@@ -12,7 +13,7 @@ class SearchBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgColor = ColorUtils.fromHex(
       config['backgroundColor'] as String? ?? '',
-      Colors.grey.shade100,
+      AppConfig.secondaryColor,
     );
     final iconColor = ColorUtils.fromHex(
       config['iconColor'] as String? ?? '',
